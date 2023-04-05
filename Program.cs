@@ -4,7 +4,7 @@
   {
     static void Main(string[] args)
     {
-      Console.WriteLine("Hello, World!");
+      Console.WriteLine($"{Ansi.Color.Background.Red}Hello, World!{Ansi.Color.Reset}");
     }
   }
 }
