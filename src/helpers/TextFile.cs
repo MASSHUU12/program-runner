@@ -18,12 +18,12 @@ namespace TextFile
   {
     public string? Name { get; set; }
     public string Path { get; set; }
-    public List<string> Args { get; set; }
+    public string Args { get; set; }
 
     public ListProgram()
     {
       Path = "";
-      Args = new List<string>();
+      Args = "";
     }
   }
 

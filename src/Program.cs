@@ -19,7 +19,7 @@
         return "main";
       };
 
-      Runner.Run(args[0], checkListName());
+      Runner.Prepare(args[0], checkListName());
     }
   }
 }

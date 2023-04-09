@@ -5,17 +5,17 @@
       {
         "Name": "Visual Studio Code",
         "Path": "code",
-        "Args": []
+        "Args": ""
       },
       {
         "Name": "Spotify",
         "Path": "C:\\Users\\<user>\\AppData\\Roaming\\Spotify.exe",
-        "Args": []
+        "Args": ""
       },
       {
         "Name": "LibreWolf",
         "Path": "",
-        "Args": []
+        "Args": ""
       }
     ]
   }
