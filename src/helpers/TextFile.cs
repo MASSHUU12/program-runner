@@ -32,9 +32,12 @@ namespace TextFile
     public static List<ListData>? Load(string filePath)
     {
       if (!File.Exists(filePath))
+      {
+        Log.Error("The specified file doesn't exist.");
         return null;
+      }
 
-      // Read the entire contents of the file at the specified path and store it in a string variable called json
+      // Read the entire contents of the file at the specified path
       string json = File.ReadAllText(filePath);
 
       try
@@ -47,6 +50,7 @@ namespace TextFile
       }
       catch (JsonException)
       {
+        Log.Error("Something went wrong when reading the contents of the file.");
         return null;
       }
     }
