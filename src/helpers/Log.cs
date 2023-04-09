@@ -79,7 +79,15 @@ public static class Log
   /// <param name="message">The information message to log.</param>
   public static void Info(string message)
   {
-    Console.WriteLine(message);
+    Console.WriteLine(
+      string.Format(
+        "{0}{1}{2}{3}",
+        Ansi.Color.Background.BrightCyan,
+        Ansi.Color.Foreground.Black,
+        message,
+        Ansi.Color.Reset
+      )
+    );
   }
 
   /// <summary>
@@ -91,10 +99,15 @@ public static class Log
     if (messages.Count() <= 0)
       return;
 
+    Console.Write(Ansi.Color.Background.BrightCyan);
+    Console.Write(Ansi.Color.Foreground.Black);
+
     foreach (string message in messages)
     {
       Console.WriteLine(message);
     }
+
+    Console.Write(Ansi.Color.Reset);
   }
 
   /// <summary>
