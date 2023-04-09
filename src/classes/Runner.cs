@@ -21,13 +21,7 @@ public static class Runner
     if (data == null || data.Count() <= 0)
       return;
 
-    Log.Info(
-      string.Format(
-        "Running programs from a list \"{0}\" from a file \"{1}\".",
-        listName,
-        filePath
-      )
-    );
+    Log.Info($"Running programs from a list \"{listName}\" from a file \"{filePath}\"");
 
     // Find the list data for the specified list name.
     ListData? listData = FindList(listName, data);
@@ -35,13 +29,7 @@ public static class Runner
     // If the list data is not found, log an error and return.
     if (listData == null)
     {
-      Log.Error(
-        string.Format(
-          "The list named \"{0}\" was not found in the file \"{1}\".",
-          listName,
-          filePath
-        )
-      );
+      Log.Error($"The list named \"{listName}\" was not found in the file \"{filePath}\"");
       return;
     }
 
@@ -49,11 +37,7 @@ public static class Runner
     foreach (ListProgram program in listData.Programs)
     {
       Log.Info(
-        string.Format(
-          "Trying to run a program \"{0}\" with arguments \"{1}\".",
-          program.Name ?? "undefined",
-          program.Args
-        )
+        $"Trying to run a program \"{program.Name ?? "undefined"}\" with arguments \"{program.Args}\""
       );
 
       // Try to run the program using the specified path and arguments.
