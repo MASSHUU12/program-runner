@@ -9,14 +9,7 @@ public static class Log
   /// <param name="message">The error message to log.</param>
   public static void Error(string message)
   {
-    Console.WriteLine(
-      string.Format(
-        "{0}{1}{2}",
-        Ansi.Color.Foreground.Red,
-        message,
-        Ansi.Color.Reset
-      )
-    );
+    Console.WriteLine($"{Ansi.Color.Foreground.Red}{message}{Ansi.Color.Reset}");
   }
 
   /// <summary>
@@ -44,14 +37,7 @@ public static class Log
   /// <param name="message">The warning message to log.</param>
   public static void Warning(string message)
   {
-    Console.WriteLine(
-      string.Format(
-        "{0}{1}{2}",
-        Ansi.Color.Foreground.Yellow,
-        message,
-        Ansi.Color.Reset
-      )
-    );
+    Console.WriteLine($"{Ansi.Color.Foreground.Yellow}{message}{Ansi.Color.Reset}");
   }
 
   /// <summary>
@@ -79,15 +65,6 @@ public static class Log
   /// <param name="message">The information message to log.</param>
   public static void Info(string message)
   {
-    // Console.WriteLine(
-    //   string.Format(
-    //     "{0}{1}{2}{3}",
-    //     Ansi.Color.Background.BrightCyan,
-    //     Ansi.Color.Foreground.Black,
-    //     message,
-    //     Ansi.Color.Reset
-    //   )
-    // );
     Console.WriteLine(message);
   }
 
@@ -100,15 +77,10 @@ public static class Log
     if (messages.Count() <= 0)
       return;
 
-    // Console.Write(Ansi.Color.Background.BrightCyan);
-    // Console.Write(Ansi.Color.Foreground.Black);
-
     foreach (string message in messages)
     {
       Console.WriteLine(message);
     }
-
-    // Console.Write(Ansi.Color.Reset);
   }
 
   /// <summary>
@@ -117,14 +89,7 @@ public static class Log
   /// <param name="message">The success message to log.</param>
   public static void Success(string message)
   {
-    Console.WriteLine(
-      string.Format(
-        "{0}{1}{2}",
-        Ansi.Color.Foreground.Green,
-        message,
-        Ansi.Color.Reset
-      )
-    );
+    Console.WriteLine($"{Ansi.Color.Foreground.Green}{message}{Ansi.Color.Reset}");
   }
 
   /// <summary>
