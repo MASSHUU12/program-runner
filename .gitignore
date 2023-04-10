@@ -424,3 +424,4 @@ obj/
 # End of https://www.toptal.com/developers/gitignore/api/csharp,dotnetcore,visualstudiocode
 
 lists.json
+config.ini
