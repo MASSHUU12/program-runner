@@ -40,7 +40,7 @@ To build and publish the program, you will need the following:
 To run the Program Runner, use the following command:
 
 ```bash
-program-runner.exe ./path/to/the/list.json <list-name>
+program-runner.exe run ./path/to/the/list.json <list-name>
 ```
 
 If `list-name` is omitted, the default list "main" will be used.
@@ -83,7 +83,7 @@ To make calling the program simpler, you can add it to the PATH, or create a sim
 Sample .bat script for Windows:
 
 ```bat
-start "" ./path/to/program-runner.exe ./path/to/lists.json main
+start "" ./path/to/program-runner.exe run ./path/to/lists.json main
 ```
 
 Such a script you can then put, for example, on the desktop and launch programs with two clicks.

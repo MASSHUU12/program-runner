@@ -12,6 +12,7 @@ All notable changes to this project will be documented in this file.
 
 - Better looking log messages
 - Console management via Spectre.Console
+- Updated README to reflect recent changes
 
 ## [1.0.0 - 2023-04-10]
 
