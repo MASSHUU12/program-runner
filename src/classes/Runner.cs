@@ -1,6 +1,7 @@
 using TextFile;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
+using Spectre.Console;
 
 /// <summary>
 /// This class provides methods to prepare and run programs from a list.
@@ -21,38 +22,44 @@ public static class Runner
     if (data == null || data.Count() <= 0)
       return;
 
-    Log.Info($"Running programs from a list \"{listName}\" from a file \"{filePath}\"");
+    AnsiConsole.Status()
+      .Start("Thinking...", ctx =>
+      {
+        ctx.Spinner(Spinner.Known.Dqpb);
+        ctx.SpinnerStyle(Style.Parse("green"));
 
-    // Find the list data for the specified list name.
-    ListData? listData = FindList(listName, data);
+        ctx.Status($"Running programs from a list \"{listName}\" from a file \"{filePath}\"");
 
-    // If the list data is not found, log an error and return.
-    if (listData == null)
-    {
-      Log.Error($"The list named \"{listName}\" was not found in the file \"{filePath}\"");
-      return;
-    }
+        // Find the list data for the specified list name.
+        ListData? listData = FindList(listName, data);
 
-    // Run each program in the list data.
-    foreach (ListProgram program in listData.Programs)
-    {
-      Log.Info(
-        $"Trying to run a program \"{program.Name ?? "undefined"}\" with arguments \"{program.Args}\""
-      );
-
-      // Try to run the program using the specified path and arguments.
-      if (!RunProgram(program.Path, program.Args))
-        // If the program cannot be run using the specified path and arguments,
-        // try to run it using the command line
-        if (!RunCommand(program.Path, program.Args))
+        // If the list data is not found, log an error and return.
+        if (listData == null)
         {
-          // If the program still cannot be run, log an error and continue
-          Log.Error("An attempt to run the program failed.\n");
-          continue;
+          Log.Error($"The list named \"{listName}\" was not found in the file \"{filePath}\"");
+          return;
         }
 
-      Log.Success("Program successfully launched.\n");
-    }
+        // Run each program in the list data.
+        foreach (ListProgram program in listData.Programs)
+        {
+          ctx.Status(
+            $"Trying to run a program \"{program.Name ?? "undefined"}\" with arguments \"{program.Args}\""
+          );
+
+          // Try to run the program using the specified path and arguments.
+          if (!RunProgram(program.Path, program.Args))
+            // If the program cannot be run using the specified path and arguments,
+            // try to run it using the command line
+            if (!RunCommand(program.Path, program.Args))
+            {
+              // If the program still cannot be run, log an error and continue
+              Log.Error($"An attempt to run the {program.Name} failed.");
+              continue;
+            }
+          Log.Success($"Program {program.Name} successfully launched.");
+        }
+      });
   }
 
   /// <summary>
