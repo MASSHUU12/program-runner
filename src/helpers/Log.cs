@@ -23,7 +23,7 @@ public static class Log
     if (severity == "off")
       return;
 
-    Console.WriteLine($"{Ansi.Color.Foreground.Red}{message}{Ansi.Color.Reset}");
+    Console.WriteLine($"{Ansi.Color.Background.Red}{Ansi.Color.Foreground.BrightWhite}ERR {Ansi.Color.Reset} {message}");
   }
 
   /// <summary>
@@ -35,14 +35,12 @@ public static class Log
     if (messages.Count() <= 0 || severity == "off")
       return;
 
-    Console.Write(Ansi.Color.Foreground.Red);
+    Console.Write($"{Ansi.Color.Background.Red}{Ansi.Color.Foreground.BrightWhite}ERR {Ansi.Color.Reset} ");
 
     foreach (string message in messages)
     {
       Console.WriteLine(message);
     }
-
-    Console.Write(Ansi.Color.Reset);
   }
 
   /// <summary>
@@ -54,7 +52,7 @@ public static class Log
     if (severity != "all")
       return;
 
-    Console.WriteLine($"{Ansi.Color.Foreground.Yellow}{message}{Ansi.Color.Reset}");
+    Console.WriteLine($"{Ansi.Color.Background.Yellow}{Ansi.Color.Foreground.BrightWhite}WARN {Ansi.Color.Reset} {message}");
   }
 
   /// <summary>
@@ -66,14 +64,12 @@ public static class Log
     if (messages.Count() <= 0 || severity != "all")
       return;
 
-    Console.Write(Ansi.Color.Foreground.Yellow);
+    Console.Write($"{Ansi.Color.Background.Yellow}{Ansi.Color.Foreground.BrightWhite}WARN {Ansi.Color.Reset} ");
 
     foreach (string message in messages)
     {
       Console.WriteLine(message);
     }
-
-    Console.Write(Ansi.Color.Reset);
   }
 
   /// <summary>
@@ -85,7 +81,7 @@ public static class Log
     if (severity != "all")
       return;
 
-    Console.WriteLine(message);
+    Console.WriteLine($"{Ansi.Color.Foreground.Black}{Ansi.Color.Background.BrightCyan} LOG {Ansi.Color.Reset} {message}");
   }
 
   /// <summary>
@@ -96,6 +92,8 @@ public static class Log
   {
     if (messages.Count() <= 0 || severity != "all")
       return;
+
+    Console.Write($"{Ansi.Color.Foreground.Black}{Ansi.Color.Background.BrightCyan} LOG {Ansi.Color.Reset} ");
 
     foreach (string message in messages)
     {
@@ -112,7 +110,7 @@ public static class Log
     if (severity != "all")
       return;
 
-    Console.WriteLine($"{Ansi.Color.Foreground.Green}{message}{Ansi.Color.Reset}");
+    Console.WriteLine($"{Ansi.Color.Background.Green}{Ansi.Color.Foreground.BrightWhite}OK {Ansi.Color.Reset} {message}");
   }
 
   /// <summary>
@@ -124,13 +122,11 @@ public static class Log
     if (messages.Count() <= 0 || severity != "all")
       return;
 
-    Console.Write(Ansi.Color.Foreground.Green);
+    Console.Write($"{Ansi.Color.Background.Green}{Ansi.Color.Foreground.BrightWhite}OK {Ansi.Color.Reset} ");
 
     foreach (string message in messages)
     {
       Console.WriteLine(message);
     }
-
-    Console.Write(Ansi.Color.Reset);
   }
 }
