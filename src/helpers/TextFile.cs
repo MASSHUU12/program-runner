@@ -1,4 +1,6 @@
 using System.Text.Json;
+using System.Text.Json.Nodes;
+using System.Text.Json.Serialization;
 
 namespace TextFile
 {
@@ -37,18 +39,42 @@ namespace TextFile
         return null;
       }
 
-      // Read the entire contents of the file at the specified path
+      // Read the entire contents of the file at the specified path.
       string json = File.ReadAllText(filePath);
 
       try
       {
-        // Deserialize the JSON string into a ListData object
-        List<ListData>? data = JsonSerializer.Deserialize<List<ListData>>(json);
+        // Parse the JSON string into a JsonDocument object.
+        JsonDocument document = JsonDocument.Parse(json);
 
-        // Return the deserialized ListData object
+        // Create a empty list of ListData objects.
+        List<ListData>? data = new List<ListData>();
+
+        // Traverse the JsonDocument object and populate the ListData objects.
+        foreach (JsonElement element in document.RootElement.EnumerateArray())
+        {
+          ListData listData = new ListData
+          {
+            Title = element.GetProperty("Title").GetString() ?? string.Empty
+          };
+
+          foreach (JsonElement programElement in element.GetProperty("Programs").EnumerateArray())
+          {
+            ListProgram program = new ListProgram
+            {
+              Name = programElement.GetProperty("Name").GetString(),
+              Path = programElement.GetProperty("Path").GetString() ?? string.Empty,
+              Args = programElement.GetProperty("Args").GetString() ?? string.Empty,
+            };
+            listData.Programs.Add(program);
+          }
+          data.Add(listData);
+        }
+
+        // Return the list of ListData objects
         return data;
       }
-      catch (JsonException)
+      catch (Exception)
       {
         Log.Error("Something went wrong when reading the contents of the file.");
         return null;
