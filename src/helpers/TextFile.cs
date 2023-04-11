@@ -2,11 +2,24 @@ using System.Text.Json;
 
 namespace TextFile
 {
+  /// <summary>
+  /// Represents a list of programs.
+  /// </summary>
   public class ListData
   {
+    /// <summary>
+    /// The title of the list.
+    /// </summary>
     public string Title { get; set; }
+
+    /// <summary>
+    /// The programs in the list.
+    /// </summary>
     public List<ListProgram> Programs { get; set; }
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ListData"/> class.
+    /// </summary>
     public ListData()
     {
       Title = "";
@@ -14,12 +27,29 @@ namespace TextFile
     }
   }
 
+  /// <summary>
+  /// Represents a program in a list.
+  /// </summary>
   public class ListProgram
   {
+    /// <summary>
+    /// The name of the program.
+    /// </summary>
     public string? Name { get; set; }
+
+    /// <summary>
+    /// The path (or command) to the program.
+    /// </summary>
     public string Path { get; set; }
+
+    /// <summary>
+    /// The arguments to pass to the program.
+    /// </summary>
     public string Args { get; set; }
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ListProgram"/> class.
+    /// </summary>
     public ListProgram()
     {
       Path = "";
@@ -27,8 +57,16 @@ namespace TextFile
     }
   }
 
+  /// <summary>
+  /// Provides helper methods for working with JSON data.
+  /// </summary>
   public static class JsonHelper
   {
+    /// <summary>
+    /// Loads a JSON file into a list of <see cref="ListData"/> objects.
+    /// </summary>
+    /// <param name="filePath">The path to the JSON file.</param>
+    /// <returns>A list of <see cref="ListData"/> objects if the file exists and is valid; otherwise, null.</returns>
     public static List<ListData>? Load(string filePath)
     {
       if (!File.Exists(filePath))

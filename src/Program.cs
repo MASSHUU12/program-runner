@@ -4,6 +4,10 @@ namespace Program
 {
   class Program
   {
+    /// <summary>
+    /// Entry point of the application.
+    /// </summary>
+    /// <param name="args">The command-line arguments.</param>
     static void Main(string[] args)
     {
       var app = new CommandApp();
