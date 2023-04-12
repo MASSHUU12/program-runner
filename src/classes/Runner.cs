@@ -23,7 +23,7 @@ public static class Runner
       return;
 
     AnsiConsole.Status()
-      .Start("Thinking...", ctx =>
+      .Start("Starting...", ctx =>
       {
         ctx.Spinner(Spinner.Known.Dqpb);
         ctx.SpinnerStyle(Style.Parse("green"));

@@ -22,7 +22,7 @@ namespace TextFile
     /// </summary>
     public ListData()
     {
-      Title = "";
+      Title = string.Empty;
       Programs = new List<ListProgram>();
     }
   }
@@ -52,8 +52,8 @@ namespace TextFile
     /// </summary>
     public ListProgram()
     {
-      Path = "";
-      Args = "";
+      Path = string.Empty;
+      Args = string.Empty;
     }
   }
 

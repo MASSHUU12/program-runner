@@ -32,7 +32,7 @@ public static class Config
     string[] lines = File.ReadAllLines(path);
 
     // Loop through each line and parse the values.
-    string section = "";
+    string section = string.Empty;
     foreach (string line in lines)
     {
       // Ignore comments and blank lines.

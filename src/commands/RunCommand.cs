@@ -45,7 +45,7 @@ public class RunCommand : Command<RunCommand.Settings>
       return "main";
     };
 
-    Runner.Prepare(settings.List ?? "", checkListName());
+    Runner.Prepare(settings.List ?? string.Empty, checkListName());
 
     return 0;
   }
