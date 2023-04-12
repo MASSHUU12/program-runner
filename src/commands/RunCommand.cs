@@ -2,6 +2,7 @@ using Spectre.Console;
 using Spectre.Console.Cli;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
+using Constants;
 
 public class RunCommand : Command<RunCommand.Settings>
 {
@@ -21,12 +22,10 @@ public class RunCommand : Command<RunCommand.Settings>
   public override ValidationResult Validate([NotNull] CommandContext context, [NotNull] Settings settings)
   {
     if (!File.Exists(settings.List))
-      return ValidationResult.Error($"File does not exists: {settings.List}");
+      return ValidationResult.Error($"{Messages.FILE_DOESNT_EXISTS}: {settings.List}");
 
-    if (!new[] { "all", "off", "error" }.Contains(settings.Log))
-      return ValidationResult.Error(
-        $"Log option does not accept: {settings.Log}\nPossible values are: all, off, error."
-        );
+    if (!Defaults.SEVERITY_VALUES.Contains(settings.Log))
+      return ValidationResult.Error(Messages.LogDoesntAccept(settings.Log));
 
     return base.Validate(context, settings);
   }
@@ -34,15 +33,15 @@ public class RunCommand : Command<RunCommand.Settings>
   public override int Execute([NotNull] CommandContext context, [NotNull] Settings settings)
   {
     // Set log level
-    Log.severity = settings.Log ?? "main";
+    Log.severity = settings.Log ?? Defaults.SEVERITY;
 
     Func<string> checkListName = () =>
     {
       if (settings.ListName != null)
         return settings.ListName;
 
-      Log.Warning("No list was passed to run, running the default \"main\".");
-      return "main";
+      Log.Warning(Messages.NO_LIST_RUNNING_DEFAULT);
+      return Defaults.LIST_NAME;
     };
 
     Runner.Prepare(settings.List ?? string.Empty, checkListName());

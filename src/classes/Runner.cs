@@ -2,6 +2,7 @@ using TextFile;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using Spectre.Console;
+using Constants;
 
 /// <summary>
 /// This class provides methods to prepare and run programs from a list.
@@ -28,7 +29,7 @@ public static class Runner
         ctx.Spinner(Spinner.Known.Dqpb);
         ctx.SpinnerStyle(Style.Parse("green"));
 
-        ctx.Status($"Running programs from a list \"{listName}\" from a file \"{filePath}\"");
+        ctx.Status(Messages.RunningFromList(listName, filePath));
 
         // Find the list data for the specified list name.
         ListData? listData = FindList(listName, data);
@@ -36,16 +37,14 @@ public static class Runner
         // If the list data is not found, log an error and return.
         if (listData == null)
         {
-          Log.Error($"The list named \"{listName}\" was not found in the file \"{filePath}\"");
+          Log.Error(Messages.ListNotFound(listName, filePath));
           return;
         }
 
         // Run each program in the list data.
         foreach (ListProgram program in listData.Programs)
         {
-          ctx.Status(
-            $"Trying to run a program \"{program.Name ?? "undefined"}\" with arguments \"{program.Args}\""
-          );
+          ctx.Status(Messages.TryingToRun(program.Name, program.Args));
 
           // Try to run the program using the specified path and arguments.
           if (!RunProgram(program.Path, program.Args))
@@ -54,10 +53,10 @@ public static class Runner
             if (!RunCommand(program.Path, program.Args))
             {
               // If the program still cannot be run, log an error and continue
-              Log.Error($"An attempt to run the {program.Name} failed.");
+              Log.Error(Messages.RunningFailed(program.Name));
               continue;
             }
-          Log.Success($"Program {program.Name} successfully launched.");
+          Log.Success(Messages.RunningSucceeded(program.Name));
         }
       });
   }

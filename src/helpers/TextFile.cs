@@ -71,7 +71,7 @@ namespace TextFile
     {
       if (!File.Exists(filePath))
       {
-        Log.Error("The specified file doesn't exist.");
+        Log.Error(Constants.Messages.FILE_DOESNT_EXISTS);
         return null;
       }
 
@@ -112,7 +112,7 @@ namespace TextFile
       }
       catch (Exception)
       {
-        Log.Error("Something went wrong when reading the contents of the file.");
+        Log.Error(Constants.Messages.READING_FILE_FAILED);
         return null;
       }
     }

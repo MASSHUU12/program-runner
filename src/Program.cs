@@ -15,7 +15,7 @@ namespace Program
       {
         config.AddCommand<RunCommand>("run")
               .WithAlias("r")
-              .WithDescription("Run programs form the list.").
+              .WithDescription(Constants.Messages.RUN_FROM_LIST).
               WithExample(new[] { "run", "./path/to/the/list.json", "--log", "all" });
       });
       app.Run(args);
