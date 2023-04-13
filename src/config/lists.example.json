@@ -5,7 +5,8 @@
       {
         "Name": "Visual Studio Code",
         "Path": "code",
-        "Args": ""
+        "Args": "",
+        "Elevated": true
       },
       {
         "Name": "Spotify",

@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.1.1 - 2023-04-13]
+
+### Added
+
+- Option to run program/command with elevated privileges via JSON or `-e`/`--elevated`
+
+### Changed
+
+- Changed some messages
+- Updated README to reflect new changes
+
 ## [1.1.0 - 2023-04-10]
 
 ### Added

@@ -12,11 +12,16 @@ public class RunCommand : Command<RunCommand.Settings>
     public string? List { get; set; }
 
     [CommandArgument(1, "[listName]")]
+    [DefaultValue(Defaults.LIST_NAME)]
     public string? ListName { get; set; }
 
     [CommandOption("-l|--log")]
-    [DefaultValue("all")]
+    [DefaultValue(Defaults.SEVERITY)]
     public string? Log { get; set; }
+
+    [CommandOption("-e|--elevated")]
+    [DefaultValue(false)]
+    public Boolean Elevated { get; set; }
   }
 
   public override ValidationResult Validate([NotNull] CommandContext context, [NotNull] Settings settings)
@@ -44,7 +49,13 @@ public class RunCommand : Command<RunCommand.Settings>
       return Defaults.LIST_NAME;
     };
 
-    Runner.Prepare(settings.List ?? string.Empty, checkListName());
+    Runner.Prepare(
+      new Runner.PrepareProps(
+        settings.List ?? string.Empty,
+        checkListName(),
+        settings.Elevated
+      )
+    );
 
     return 0;
   }
