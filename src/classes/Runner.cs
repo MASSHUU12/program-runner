@@ -9,12 +9,32 @@ using Constants;
 /// </summary>
 public static class Runner
 {
+  /// <summary>
+  /// A class that contains properties for preparing and running programs from a list.
+  /// </summary>
   public class PrepareProps
   {
-    public string FilePath { get; set; }
-    public string ListName { get; set; }
-    public bool GlobalElevated { get; set; }
+    /// <summary>
+    /// The file path of the JSON file that contains the list of programs to run.
+    /// </summary>
+    public string FilePath { get; }
 
+    /// <summary>
+    /// The name of the list to run.
+    /// </summary>
+    public string ListName { get; }
+
+    /// <summary>
+    /// A value indicating whether to run the programs with elevated privileges.
+    /// </summary>
+    public bool GlobalElevated { get; }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="PrepareProps"/> class with the specified properties.
+    /// </summary>
+    /// <param name="FilePath">The file path of the JSON file that contains the list of programs to run.</param>
+    /// <param name="ListName">The name of the list to run.</param>
+    /// <param name="GlobalElevated">A value indicating whether to run the programs with elevated privileges.</param>
     public PrepareProps(string? FilePath, string? ListName, bool? GlobalElevated)
     {
       this.FilePath = FilePath ?? string.Empty;
@@ -27,8 +47,7 @@ public static class Runner
   /// <summary>
   /// Prepares and runs programs from a list.
   /// </summary>
-  /// <param name="filePath">The file path of the JSON file that contains the list of programs to run.</param>
-  /// <param name="listName">The name of the list to run</param>
+  /// <param name="props">The properties for preparing and running the programs.</param>
   public static void Prepare(PrepareProps props)
   {
     List<ListData>? data = JsonHelper.Load(props.FilePath);
@@ -37,6 +56,7 @@ public static class Runner
     if (data == null || data.Count() <= 0)
       return;
 
+    // Start the status display.
     AnsiConsole.Status()
       .Start("Starting...", ctx =>
       {
