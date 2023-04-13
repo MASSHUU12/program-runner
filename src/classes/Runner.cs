@@ -78,13 +78,18 @@ public static class Runner
         // Run each program in the list data.
         foreach (ListProgram program in listData.Programs)
         {
+          bool elevated = false;
+
+          if (props.GlobalElevated || program.Elevated == true)
+            elevated = true;
+
           ctx.Status(Messages.TryingToRun(program.Name, program.Args));
 
           // Try to run the program using the specified path and arguments.
-          if (!RunProgram(program.Path, program.Args))
+          if (!RunProgram(program.Path, program.Args, elevated))
             // If the program cannot be run using the specified path and arguments,
             // try to run it using the command line
-            if (!RunCommand(program.Path, program.Args))
+            if (!RunCommand(program.Path, program.Args, elevated))
             {
               // If the program still cannot be run, log an error and continue
               Log.Error(Messages.RunningFailed(program.Name));
@@ -100,8 +105,9 @@ public static class Runner
   /// </summary>
   /// <param name="command">The command to run.</param>
   /// <param name="arguments">The arguments to pass to the command.</param>
+  /// <param name="elevated">Specifies whether to run the command with elevated privileges (e.g., as an administrator on Windows).</param>
   /// <returns>True if the command is successfully launched, otherwise false.</returns>
-  public static bool RunCommand(string command, string arguments)
+  public static bool RunCommand(string command, string arguments, bool elevated)
   {
     Process process = new Process();
     ProcessStartInfo startInfo = new ProcessStartInfo();
@@ -109,12 +115,19 @@ public static class Runner
     // Set the start info for the command line based on the operating system.
     if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
     {
+      // On Windows, use the "cmd" command with the "/c" argument to run the command.
       startInfo.FileName = "cmd";
       startInfo.Arguments = $"/c {command} {arguments}";
+
+      // If elevated privileges are requested, set the "Verb" property of the start info to "runas".
+      if (elevated)
+        startInfo.Verb = "runas";
     }
     else
     {
-      startInfo.FileName = "/bin/bash";
+      // On macOS and Linux, use "/bin/bash" to run the command,
+      // or "sudo" if elevated privileges are requested.
+      startInfo.FileName = elevated ? "sudo" : "/bin/bash";
       startInfo.Arguments = $"-c \"{command}\" {arguments}";
     }
 
@@ -141,8 +154,9 @@ public static class Runner
   /// </summary>
   /// <param name="programPath">The path of the program to run.</param>
   /// <param name="arguments">The arguments to pass to the program.</param>
+  /// <param name="elevated">Whether to run the program with elevated privileges.</param>
   /// <returns>True if the program was successfully started, false otherwise.</returns>
-  public static bool RunProgram(string programPath, string arguments)
+  public static bool RunProgram(string programPath, string arguments, bool elevated)
   {
     string? program = programPath;
 
@@ -158,6 +172,15 @@ public static class Runner
 
     ProcessStartInfo startInfo = new ProcessStartInfo(program);
     startInfo.Arguments = arguments;
+
+    // If elevated is true, configure the start info to run the program with elevated privileges.
+    if (elevated)
+      // If running on Windows, use the "runas" verb to elevate the process.
+      if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        startInfo.Verb = "runas";
+      // If running on Linux or macOS, use sudo to elevate the process.
+      else
+        startInfo.FileName = "sudo";
 
     try
     {
