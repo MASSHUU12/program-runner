@@ -58,8 +58,9 @@ The JSON file should be in the following format:
     "Programs": [
       {
         "Name": "Program 1",
-        "Path": "path/to/program1",
-        "Args": "arguments for program 1"
+        "Path": "path/to/program1", // Path to the program, program from PATH or a command
+        "Args": "arguments for program 1",
+        "Elevated": true // Run with elevated privileges
       },
       {
         "Name": "Program 2",
