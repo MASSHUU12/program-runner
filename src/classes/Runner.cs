@@ -132,7 +132,7 @@ public static class Runner
     }
 
     // Configure the start info for the process.
-    startInfo.UseShellExecute = false;
+    startInfo.UseShellExecute = elevated ? true : false;
     startInfo.CreateNoWindow = true;
     process.StartInfo = startInfo;
 
@@ -172,6 +172,7 @@ public static class Runner
 
     ProcessStartInfo startInfo = new ProcessStartInfo(program);
     startInfo.Arguments = arguments;
+    startInfo.UseShellExecute = elevated ? true : false;
 
     // If elevated is true, configure the start info to run the program with elevated privileges.
     if (elevated)

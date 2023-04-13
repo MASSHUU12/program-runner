@@ -100,6 +100,7 @@ namespace TextFile
 
           foreach (JsonElement programElement in element.GetProperty("Programs").EnumerateArray())
           {
+            // Define a function to check if the "Elevated" property exists in the current JSON element.
             Func<bool> IsElevated = () =>
             {
               try
