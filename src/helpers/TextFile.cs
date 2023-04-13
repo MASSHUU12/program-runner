@@ -100,12 +100,24 @@ namespace TextFile
 
           foreach (JsonElement programElement in element.GetProperty("Programs").EnumerateArray())
           {
+            Func<bool> IsElevated = () =>
+            {
+              try
+              {
+                return programElement.GetProperty("Elevated").GetBoolean();
+              }
+              catch (KeyNotFoundException)
+              {
+                return false;
+              }
+            };
+
             ListProgram program = new ListProgram
             {
               Name = programElement.GetProperty("Name").GetString() ?? string.Empty,
               Path = programElement.GetProperty("Path").GetString() ?? string.Empty,
               Args = programElement.GetProperty("Args").GetString() ?? string.Empty,
-              Elevated = programElement.GetProperty("Elevated").GetBoolean()
+              Elevated = IsElevated()
             };
             listData.Programs.Add(program);
           }
