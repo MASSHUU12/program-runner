@@ -47,13 +47,17 @@ namespace TextFile
     /// </summary>
     public string Args { get; set; }
 
+    public bool? Elevated { get; set; }
+
     /// <summary>
     /// Initializes a new instance of the <see cref="ListProgram"/> class.
     /// </summary>
     public ListProgram()
     {
+      Name = string.Empty;
       Path = string.Empty;
       Args = string.Empty;
+      Elevated = false;
     }
   }
 
@@ -98,9 +102,10 @@ namespace TextFile
           {
             ListProgram program = new ListProgram
             {
-              Name = programElement.GetProperty("Name").GetString(),
+              Name = programElement.GetProperty("Name").GetString() ?? string.Empty,
               Path = programElement.GetProperty("Path").GetString() ?? string.Empty,
               Args = programElement.GetProperty("Args").GetString() ?? string.Empty,
+              Elevated = programElement.GetProperty("Elevated").GetBoolean()
             };
             listData.Programs.Add(program);
           }
