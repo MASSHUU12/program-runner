@@ -9,15 +9,29 @@ using Constants;
 /// </summary>
 public static class Runner
 {
+  public class PrepareProps
+  {
+    public string FilePath { get; set; }
+    public string ListName { get; set; }
+    public bool GlobalElevated { get; set; }
+
+    public PrepareProps(string? FilePath, string? ListName, bool? GlobalElevated)
+    {
+      this.FilePath = FilePath ?? string.Empty;
+      this.ListName = ListName ?? string.Empty;
+      this.GlobalElevated = GlobalElevated ?? false;
+    }
+  }
+
 
   /// <summary>
   /// Prepares and runs programs from a list.
   /// </summary>
   /// <param name="filePath">The file path of the JSON file that contains the list of programs to run.</param>
   /// <param name="listName">The name of the list to run</param>
-  public static void Prepare(string filePath, string listName)
+  public static void Prepare(PrepareProps props)
   {
-    List<ListData>? data = JsonHelper.Load(filePath);
+    List<ListData>? data = JsonHelper.Load(props.FilePath);
 
     // If the list is empty or not found, return.
     if (data == null || data.Count() <= 0)
@@ -29,15 +43,15 @@ public static class Runner
         ctx.Spinner(Spinner.Known.Dqpb);
         ctx.SpinnerStyle(Style.Parse("green"));
 
-        ctx.Status(Messages.RunningFromList(listName, filePath));
+        ctx.Status(Messages.RunningFromList(props.ListName, props.FilePath));
 
         // Find the list data for the specified list name.
-        ListData? listData = FindList(listName, data);
+        ListData? listData = FindList(props.ListName, data);
 
         // If the list data is not found, log an error and return.
         if (listData == null)
         {
-          Log.Error(Messages.ListNotFound(listName, filePath));
+          Log.Error(Messages.ListNotFound(props.ListName, props.FilePath));
           return;
         }
 
