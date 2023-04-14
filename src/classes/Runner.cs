@@ -86,10 +86,10 @@ public static class Runner
           ctx.Status(Messages.TryingToRun(program.Name, program.Args));
 
           // Try to run the program using the specified path and arguments.
-          if (!RunProgram(program.Path, program.Args, elevated))
+          if (!RunProgram(program.Run, program.Args ?? "", elevated))
             // If the program cannot be run using the specified path and arguments,
             // try to run it using the command line
-            if (!RunCommand(program.Path, program.Args, elevated))
+            if (!RunCommand(program.Run, program.Args ?? "", elevated))
             {
               // If the program still cannot be run, log an error and continue
               Log.Error(Messages.RunningFailed(program.Name));

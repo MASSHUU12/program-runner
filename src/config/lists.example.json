@@ -4,19 +4,16 @@
     "Programs": [
       {
         "Name": "Visual Studio Code",
-        "Path": "code",
-        "Args": "",
+        "Run": "code",
         "Elevated": true
       },
       {
-        "Name": "Spotify",
-        "Path": "C:\\Users\\<user>\\AppData\\Roaming\\Spotify.exe",
-        "Args": ""
+        "Run": "<path>\\Spotify.exe"
       },
       {
         "Name": "LibreWolf",
-        "Path": "",
-        "Args": ""
+        "Run": "<path>\\librewolf.exe",
+        "Args": "--new-tab"
       }
     ]
   }

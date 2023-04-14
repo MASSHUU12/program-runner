@@ -40,12 +40,12 @@ namespace TextFile
     /// <summary>
     /// The path (or command) to the program.
     /// </summary>
-    public string Path { get; set; }
+    public string Run { get; set; }
 
     /// <summary>
     /// The arguments to pass to the program.
     /// </summary>
-    public string Args { get; set; }
+    public string? Args { get; set; }
 
     public bool? Elevated { get; set; }
 
@@ -55,7 +55,7 @@ namespace TextFile
     public ListProgram()
     {
       Name = string.Empty;
-      Path = string.Empty;
+      Run = string.Empty;
       Args = string.Empty;
       Elevated = false;
     }
@@ -113,11 +113,23 @@ namespace TextFile
               }
             };
 
+            Func<string, string> TryGetProperty = (string property) =>
+            {
+              try
+              {
+                return programElement.GetProperty(property).GetString() ?? string.Empty;
+              }
+              catch (KeyNotFoundException)
+              {
+                return "";
+              }
+            };
+
             ListProgram program = new ListProgram
             {
-              Name = programElement.GetProperty("Name").GetString() ?? string.Empty,
-              Path = programElement.GetProperty("Path").GetString() ?? string.Empty,
-              Args = programElement.GetProperty("Args").GetString() ?? string.Empty,
+              Name = TryGetProperty("Name"),
+              Run = TryGetProperty("Run"),
+              Args = TryGetProperty("Args"),
               Elevated = IsElevated()
             };
             listData.Programs.Add(program);
