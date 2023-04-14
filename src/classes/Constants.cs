@@ -103,6 +103,8 @@ namespace Constants
     /// <returns>A string describing that running the program failed.</returns>
     public static string RunningFailed(string? name)
     {
+      if (name == null || name == string.Empty)
+        return $"An attempt to run the program failed.";
       return $"An attempt to run the {name} failed.";
     }
 
@@ -113,6 +115,8 @@ namespace Constants
     /// <returns>A string describing that running the program succeeded.</returns>
     public static string RunningSucceeded(string? name)
     {
+      if (name == null || name == string.Empty)
+        return $"Program successfully launched.";
       return $"Program {name} successfully launched.";
     }
   }
