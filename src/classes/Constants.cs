@@ -71,7 +71,7 @@ namespace Constants
     /// <returns>A string describing that programs are being run from a list.</returns>
     public static string RunningFromList(string? list, string? file)
     {
-      return $"Running programs from a list \"{list}\" from a file \"file\".";
+      return $"Running programs from a list \"{list}\" from a file \"{file}\".";
     }
 
     /// <summary>
@@ -93,7 +93,11 @@ namespace Constants
     /// <returns>A string describing that a program is being run with its name and arguments.</returns>
     public static string TryingToRun(string? name, string? args)
     {
-      return $"Trying to run a program \"{name ?? "undefined"}\" with arguments \"{args}\".";
+      if (name == null || name == string.Empty)
+        name = "undefined";
+      if (args == null || args == string.Empty)
+        return $"Trying to run a program \"{name}\" without arguments.";
+      return $"Trying to run a program \"{name}\" with arguments \"{args}\".";
     }
 
     /// <summary>
@@ -104,7 +108,7 @@ namespace Constants
     public static string RunningFailed(string? name)
     {
       if (name == null || name == string.Empty)
-        return $"An attempt to run the program failed.";
+        name = "undefined";
       return $"An attempt to run the {name} failed.";
     }
 
@@ -116,7 +120,7 @@ namespace Constants
     public static string RunningSucceeded(string? name)
     {
       if (name == null || name == string.Empty)
-        return $"Program successfully launched.";
+        name = "undefined";
       return $"Program {name} successfully launched.";
     }
   }
