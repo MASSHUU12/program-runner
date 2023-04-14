@@ -56,48 +56,40 @@ public static class Runner
     if (data == null || data.Count() <= 0)
       return;
 
-    // Start the status display.
-    AnsiConsole.Status()
-      .Start("Starting...", ctx =>
-      {
-        ctx.Spinner(Spinner.Known.Dqpb);
-        ctx.SpinnerStyle(Style.Parse("green"));
+    Log.Info(Messages.RunningFromList(props.ListName, props.FilePath));
 
-        ctx.Status(Messages.RunningFromList(props.ListName, props.FilePath));
+    // Find the list data for the specified list name.
+    ListData? listData = FindList(props.ListName, data);
 
-        // Find the list data for the specified list name.
-        ListData? listData = FindList(props.ListName, data);
+    // If the list data is not found, log an error and return.
+    if (listData == null)
+    {
+      Log.Error(Messages.ListNotFound(props.ListName, props.FilePath));
+      return;
+    }
 
-        // If the list data is not found, log an error and return.
-        if (listData == null)
+    // Run each program in the list data.
+    foreach (ListProgram program in listData.Programs)
+    {
+      bool elevated = false;
+
+      if (props.GlobalElevated || program.Elevated == true)
+        elevated = true;
+
+      Log.Info(Messages.TryingToRun(program.Name, program.Args));
+
+      // Try to run the program using the specified path and arguments.
+      if (!RunProgram(program.Run, program.Args ?? "", elevated))
+        // If the program cannot be run using the specified path and arguments,
+        // try to run it using the command line
+        if (!RunCommand(program.Run, program.Args ?? "", elevated))
         {
-          Log.Error(Messages.ListNotFound(props.ListName, props.FilePath));
-          return;
+          // If the program still cannot be run, log an error and continue
+          Log.Error(Messages.RunningFailed(program.Name));
+          continue;
         }
-
-        // Run each program in the list data.
-        foreach (ListProgram program in listData.Programs)
-        {
-          bool elevated = false;
-
-          if (props.GlobalElevated || program.Elevated == true)
-            elevated = true;
-
-          ctx.Status(Messages.TryingToRun(program.Name, program.Args));
-
-          // Try to run the program using the specified path and arguments.
-          if (!RunProgram(program.Run, program.Args ?? "", elevated))
-            // If the program cannot be run using the specified path and arguments,
-            // try to run it using the command line
-            if (!RunCommand(program.Run, program.Args ?? "", elevated))
-            {
-              // If the program still cannot be run, log an error and continue
-              Log.Error(Messages.RunningFailed(program.Name));
-              continue;
-            }
-          Log.Success(Messages.RunningSucceeded(program.Name));
-        }
-      });
+      Log.Success(Messages.RunningSucceeded(program.Name));
+    };
   }
 
   /// <summary>

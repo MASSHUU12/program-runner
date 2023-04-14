@@ -9,6 +9,7 @@ All notable changes to this project will be documented in this file.
 - Better JSON structure
 - Name and Args are now fully optional
 - Slightly improved some messages.
+- Restored old way of displaying status updates
 
 ## [1.1.1 - 2023-04-13]
 
