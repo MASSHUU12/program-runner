@@ -1,6 +1,7 @@
 # Program Runner
 
-Program Runner is a CLI tool written in .NET 7 (C#) that allows users to run multiple programs or commands at once.
+Program Runner is a CLI tool written in C# that allows users to run multiple programs or commands at once.
+
 The tool reads a list of programs/commands from a JSON file and executes them in parallel.
 
 ## Table of Contents
@@ -48,8 +49,6 @@ If `list-name` is omitted, the default list "main" will be used.
 The JSON file should be in the following format:
 
 > "Name" is just to make everything look nice in the console, you can leave these fields blank, or write anything there.
->
-> For commands, write the command itself in "Path".
 
 ```json
 [
@@ -57,20 +56,18 @@ The JSON file should be in the following format:
     "Title": "main",
     "Programs": [
       {
-        "Name": "Program 1",
-        "Path": "path/to/program1", // Path to the program, program from PATH or a command
-        "Args": "arguments for program 1",
-        "Elevated": true // Run with elevated privileges
+        "Name": "Program 1", // Optional
+        "Run": "path/to/program1", // Path to the program, program from PATH or a command
+        "Args": "arguments for program 1", // Optional
+        "Elevated": true // Run with elevated privileges, optional
       },
       {
-        "Name": "Program 2",
         "Path": "path/to/program2",
         "Args": "arguments for program 2"
       },
       {
         "Name": "Command 1",
         "Path": "command",
-        "Args": "command arguments"
       }
     ]
   }
