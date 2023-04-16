@@ -1,7 +1,6 @@
 using TextFile;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
-using Spectre.Console;
 using Constants;
 
 /// <summary>
@@ -79,10 +78,10 @@ public static class Runner
       Log.Info(Messages.TryingToRun(program.Name, program.Args));
 
       // Try to run the program using the specified path and arguments.
-      if (!RunProgram(program.Run, program.Args ?? "", elevated))
+      if (!RunProgram(program.Run, program.Args ?? string.Empty, elevated))
         // If the program cannot be run using the specified path and arguments,
         // try to run it using the command line
-        if (!RunCommand(program.Run, program.Args ?? "", elevated))
+        if (!RunCommand(program.Run, program.Args ?? string.Empty, elevated))
         {
           // If the program still cannot be run, log an error and continue
           Log.Error(Messages.RunningFailed(program.Name));
