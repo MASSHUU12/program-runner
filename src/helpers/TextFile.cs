@@ -71,13 +71,10 @@ namespace TextFile
     /// </summary>
     /// <param name="filePath">The path to the JSON file.</param>
     /// <returns>A list of <see cref="ListData"/> objects if the file exists and is valid; otherwise, null.</returns>
-    public static List<ListData>? Load(string filePath)
+    public static List<ListData> Load(string filePath)
     {
       if (!File.Exists(filePath))
-      {
-        Log.Error(Constants.Messages.FILE_DOESNT_EXISTS);
-        return null;
-      }
+        throw new FileNotFoundException(Constants.Messages.FILE_DOESNT_EXISTS);
 
       // Read the entire contents of the file at the specified path.
       string json = File.ReadAllText(filePath);
@@ -142,8 +139,7 @@ namespace TextFile
       }
       catch (Exception)
       {
-        Log.Error(Constants.Messages.READING_FILE_FAILED);
-        return null;
+        throw new FileLoadException(Constants.Messages.READING_FILE_FAILED);
       }
     }
   }

@@ -49,10 +49,10 @@ public static class Runner
   /// <param name="props">The properties for preparing and running the programs.</param>
   public static void Prepare(PrepareProps props)
   {
-    List<ListData>? data = JsonHelper.Load(props.FilePath);
+    List<ListData> data = JsonHelper.Load(props.FilePath);
 
-    // If the list is empty or not found, return.
-    if (data == null || data.Count() <= 0)
+    // If the list is empty, return.
+    if (data.Count() <= 0)
       return;
 
     Log.Info(Messages.RunningFromList(props.ListName, props.FilePath));
