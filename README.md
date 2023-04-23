@@ -17,8 +17,7 @@ The tool reads a list of programs/commands from a JSON file and executes them in
 
 ## Compatibility
 
-The programs work on Windows, and should work on Linux and macOS.
-However, it has only been tested on Windows.
+This program is cross-platform although, it has only been tested on Windows.
 
 ## Prerequisites
 
