@@ -34,11 +34,11 @@ public static class Runner
     /// <param name="FilePath">The file path of the JSON file that contains the list of programs to run.</param>
     /// <param name="ListName">The name of the list to run.</param>
     /// <param name="GlobalElevated">A value indicating whether to run the programs with elevated privileges.</param>
-    public PrepareProps(string? FilePath, string? ListName, bool? GlobalElevated)
+    public PrepareProps(string FilePath, string ListName, bool GlobalElevated)
     {
-      this.FilePath = FilePath ?? string.Empty;
-      this.ListName = ListName ?? string.Empty;
-      this.GlobalElevated = GlobalElevated ?? false;
+      this.FilePath = FilePath;
+      this.ListName = ListName;
+      this.GlobalElevated = GlobalElevated;
     }
   }
 
