@@ -9,14 +9,19 @@ namespace Constants
   public static class Defaults
   {
     /// <summary>
-    /// Default severity level for logging.
-    /// </summary>
-    public const string SEVERITY = "all";
-
-    /// <summary>
     /// Possible values for severity level.
     /// </summary>
-    public static readonly string[] SEVERITY_VALUES = { "all", "off", "error" };
+    public enum Severity
+    {
+      All,
+      Off,
+      Error
+    }
+
+    /// <summary>
+    /// Default severity level for logging.
+    /// </summary>
+    public const short SEVERITY = (short)Severity.All;
 
     /// <summary>
     /// Default name for a list.
@@ -65,7 +70,7 @@ namespace Constants
     {
       return $"Log option does not accept: {option}.\nPossible values are: {string.Join(
         ", ",
-        Defaults.SEVERITY_VALUES)}";
+        string.Join(", ", Enum.GetValues(typeof(Defaults.Severity)).Cast<Defaults.Severity>().Select(x => x.ToString())))}";
     }
 
     /// <summary>
