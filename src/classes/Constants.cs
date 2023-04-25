@@ -52,6 +52,11 @@ namespace Constants
     public const string RUN_FROM_LIST = "Run programs from the list.";
 
     /// <summary>
+    /// Message for when no programs were found in the list.
+    /// </summary>
+    public const string NO_PROGRAMS_FOUND = "No programs found to run in the list";
+
+    /// <summary>
     /// Message for when a log option is not accepted.
     /// </summary>
     /// <param name="option">The log option that is not accepted.</param>
@@ -122,6 +127,38 @@ namespace Constants
       if (name == null || name == string.Empty)
         name = "undefined";
       return $"Program {name} successfully launched.";
+    }
+
+    /// <summary>
+    /// Returns a string message indicating that a property with the specified name
+    /// is not a string or boolean value.
+    /// </summary>
+    /// <param name="propertyName">The name of the property that is not a string or boolean value.</param>
+    /// <returns>A string message indicating that a property with the specified name
+    /// is not a string or boolean value.</returns>
+    public static string PropertyNotStringOrBool(string propertyName)
+    {
+      return $"Property \"{propertyName}\" is not a string or boolean value.";
+    }
+
+    /// <summary>
+    /// Returns a string message indicating that a required property with the specified name is missing.
+    /// </summary>
+    /// <param name="propertyName">The name of the missing property.</param>
+    /// <returns>A string message indicating that a required property with the specified name is missing.</returns>
+    public static string PropertyMissing(string propertyName)
+    {
+      return $"Property \"{propertyName}\" is missing.";
+    }
+
+    /// <summary>
+    /// Returns a string message indicating that a non-optional property with the specified name is not present.
+    /// </summary>
+    /// <param name="propertyName">The name of the missing property.</param>
+    /// <returns>A string message indicating that a non-optional property with the specified name is not present.</returns>
+    public static string PropertyNotOptional(string propertyName)
+    {
+      return $"Property \"{propertyName}\" is not optional.";
     }
   }
 }

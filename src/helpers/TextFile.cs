@@ -1,4 +1,5 @@
 using System.Text.Json;
+using Constants;
 
 namespace TextFile
 {
@@ -105,7 +106,7 @@ namespace TextFile
         foreach (JsonElement programElement in element.TryGetProperty("Programs",
           out JsonElement programsElement)
             ? programsElement.EnumerateArray()
-            : throw new JsonException($"No programs found to run in the list \"{listData.Title}\"."))
+            : throw new JsonException($"{Messages.NO_PROGRAMS_FOUND} \"{listData.Title}\"."))
         {
           // Create a new ListProgram object and set its Name, Run, Args, and Elevated properties
           // based on the values of the corresponding properties in the current JSON element.
@@ -164,18 +165,18 @@ namespace TextFile
             catch (InvalidOperationException)
             {
               // If getting the property's boolean value also fails, throw an exception.
-              throw new InvalidOperationException($"Property \"{propertyName}\" is not a string or boolean value.");
+              throw new InvalidOperationException(Messages.PropertyNotStringOrBool(propertyName));
             }
           }
         }
         // If the property exists but has a null value, check if it's optional or not.
         else if (!optional)
           // If the property is not optional, throw an exception.
-          throw new InvalidOperationException($"Property \"{propertyName}\" is missing.");
+          throw new InvalidOperationException(Messages.PropertyMissing(propertyName));
 
       // If the property is still empty and is not optional, throw an exception.
       if (property == string.Empty && !optional)
-        throw new InvalidOperationException($"Property \"{propertyName}\" is not optional.");
+        throw new InvalidOperationException(Messages.PropertyNotOptional(propertyName));
 
       // Return the property value (which can be either a string or a boolean converted to a string).
       return property;
