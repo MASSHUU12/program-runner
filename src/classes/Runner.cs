@@ -100,43 +100,44 @@ public static class Runner
   /// <returns>True if the command is successfully launched, otherwise false.</returns>
   public static bool RunCommand(string command, string arguments, bool elevated)
   {
-    Process process = new Process();
-    ProcessStartInfo startInfo = new ProcessStartInfo();
-
-    // Set the start info for the command line based on the operating system.
-    if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+    using (Process process = new Process())
     {
-      // On Windows, use the "cmd" command with the "/c" argument to run the command.
-      startInfo.FileName = "cmd";
-      startInfo.Arguments = $"/c {command} {arguments}";
+      ProcessStartInfo startInfo = new ProcessStartInfo();
 
-      // If elevated privileges are requested, set the "Verb" property of the start info to "runas".
-      if (elevated)
-        startInfo.Verb = "runas";
-    }
-    else
-    {
-      // On macOS and Linux, use "/bin/bash" to run the command,
-      // or "sudo" if elevated privileges are requested.
-      startInfo.FileName = elevated ? "sudo" : "/bin/bash";
-      startInfo.Arguments = $"-c \"{command}\" {arguments}";
-    }
+      // Set the start info for the command line based on the operating system.
+      if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+      {
+        // On Windows, use the "cmd" command with the "/c" argument to run the command.
+        startInfo.FileName = "cmd";
+        startInfo.Arguments = $"/c {command} {arguments}";
 
-    // Configure the start info for the process.
-    startInfo.UseShellExecute = elevated ? true : false;
-    startInfo.CreateNoWindow = true;
-    process.StartInfo = startInfo;
+        // If elevated privileges are requested, set the "Verb" property of the start info to "runas".
+        if (elevated)
+          startInfo.Verb = "runas";
+      }
+      else
+      {
+        // On macOS and Linux, use "/bin/bash" to run the command,
+        // or "sudo" if elevated privileges are requested.
+        startInfo.FileName = elevated ? "sudo" : "/bin/bash";
+        startInfo.Arguments = $"-c \"{command}\" {arguments}";
+      }
 
-    try
-    {
-      // Start the process and return true if it is successfully launched.
-      process.Start();
-    }
-    catch (Exception)
-    {
-      return false;
-    }
+      // Configure the start info for the process.
+      startInfo.UseShellExecute = elevated ? true : false;
+      startInfo.CreateNoWindow = true;
+      process.StartInfo = startInfo;
 
+      try
+      {
+        // Start the process and return true if it is successfully launched.
+        process.Start();
+      }
+      catch (Exception)
+      {
+        return false;
+      }
+    }
     return true;
   }
 
@@ -177,7 +178,7 @@ public static class Runner
     try
     {
       // Start the process with the specified start info.
-      Process.Start(startInfo);
+      using Process? process = Process.Start(startInfo);
     }
     catch (Exception)
     {
