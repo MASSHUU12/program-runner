@@ -58,14 +58,7 @@ public static class Runner
     Log.Info(Messages.RunningFromList(props.ListName, props.FilePath));
 
     // Find the list data for the specified list name.
-    ListData? listData = FindList(props.ListName, data);
-
-    // If the list data is not found, log an error and return.
-    if (listData == null)
-    {
-      Log.Error(Messages.ListNotFound(props.ListName, props.FilePath));
-      return;
-    }
+    ListData listData = FindList(props.ListName, data);
 
     // Run each program in the list data.
     foreach (ListProgram program in listData.Programs)
@@ -230,7 +223,7 @@ public static class Runner
   /// <param name="listTitle">The title of the ListData to search for.</param>
   /// <param name="data">The List of ListData objects to search in.</param>
   /// <returns>The first ListData object with a matching title, or null if no match is found.</returns>
-  private static ListData? FindList(string listTitle, List<ListData> data)
+  private static ListData FindList(string listTitle, List<ListData> data)
   {
     foreach (ListData listData in data)
     {
@@ -238,6 +231,7 @@ public static class Runner
         return listData;
     }
 
-    return null;
+    // If the list data is not found, throw an error.
+    throw new KeyNotFoundException(Messages.ListNotFound(listTitle));
   }
 }

@@ -88,11 +88,10 @@ namespace Constants
     /// Message for when a list is not found.
     /// </summary>
     /// <param name="list">The name of the list that was not found.</param>
-    /// <param name="file">The name of the file containing the list.</param>
     /// <returns>A string describing that the list was not found in the file.</returns>
-    public static string ListNotFound(string? list, string? file)
+    public static string ListNotFound(string list)
     {
-      return $"The list named \"{list}\" was not found in the file \"{file}\".";
+      return $"The list named \"{list}\" was not found.";
     }
 
     /// <summary>
