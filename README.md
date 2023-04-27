@@ -61,12 +61,12 @@ The JSON file should be in the following format:
         "Elevated": true // Run with elevated privileges, optional
       },
       {
-        "Path": "path/to/program2",
+        "Run": "path/to/program2",
         "Args": "arguments for program 2"
       },
       {
         "Name": "Command 1",
-        "Path": "command",
+        "Run": "command",
       }
     ]
   }
