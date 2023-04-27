@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.2.0 - 2023-04-27]
+
+### Changed
+
+- Better JSON structure
+- Name and Args are now fully optional
+- Slightly improved some messages
+- Restored old way of displaying status updates
+- Removed unused package, thus reducing the size of the compiled program
+- Updated README to reflect new changes
+- Improved error handling
+
 ## [1.1.1 - 2023-04-13]
 
 ### Added

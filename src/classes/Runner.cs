@@ -1,7 +1,6 @@
 using TextFile;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
-using Spectre.Console;
 using Constants;
 
 /// <summary>
@@ -35,11 +34,11 @@ public static class Runner
     /// <param name="FilePath">The file path of the JSON file that contains the list of programs to run.</param>
     /// <param name="ListName">The name of the list to run.</param>
     /// <param name="GlobalElevated">A value indicating whether to run the programs with elevated privileges.</param>
-    public PrepareProps(string? FilePath, string? ListName, bool? GlobalElevated)
+    public PrepareProps(string FilePath, string ListName, bool GlobalElevated)
     {
-      this.FilePath = FilePath ?? string.Empty;
-      this.ListName = ListName ?? string.Empty;
-      this.GlobalElevated = GlobalElevated ?? false;
+      this.FilePath = FilePath;
+      this.ListName = ListName;
+      this.GlobalElevated = GlobalElevated;
     }
   }
 
@@ -50,54 +49,39 @@ public static class Runner
   /// <param name="props">The properties for preparing and running the programs.</param>
   public static void Prepare(PrepareProps props)
   {
-    List<ListData>? data = JsonHelper.Load(props.FilePath);
+    List<ListData> data = JsonHelper.Load(props.FilePath);
 
-    // If the list is empty or not found, return.
-    if (data == null || data.Count() <= 0)
+    // If the list is empty, return.
+    if (data.Count() <= 0)
       return;
 
-    // Start the status display.
-    AnsiConsole.Status()
-      .Start("Starting...", ctx =>
-      {
-        ctx.Spinner(Spinner.Known.Dqpb);
-        ctx.SpinnerStyle(Style.Parse("green"));
+    Log.Info(Messages.RunningFromList(props.ListName, props.FilePath));
 
-        ctx.Status(Messages.RunningFromList(props.ListName, props.FilePath));
+    // Find the list data for the specified list name.
+    ListData listData = FindList(props.ListName, data);
 
-        // Find the list data for the specified list name.
-        ListData? listData = FindList(props.ListName, data);
+    // Run each program in the list data.
+    foreach (ListProgram program in listData.Programs)
+    {
+      bool elevated = false;
 
-        // If the list data is not found, log an error and return.
-        if (listData == null)
+      if (props.GlobalElevated || program.Elevated == true)
+        elevated = true;
+
+      Log.Info(Messages.TryingToRun(program.Name, program.Args));
+
+      // Try to run the program using the specified path and arguments.
+      if (!RunProgram(program.Run, program.Args ?? string.Empty, elevated))
+        // If the program cannot be run using the specified path and arguments,
+        // try to run it using the command line
+        if (!RunCommand(program.Run, program.Args ?? string.Empty, elevated))
         {
-          Log.Error(Messages.ListNotFound(props.ListName, props.FilePath));
-          return;
+          // If the program still cannot be run, log an error and continue
+          Log.Error(Messages.RunningFailed(program.Name));
+          continue;
         }
-
-        // Run each program in the list data.
-        foreach (ListProgram program in listData.Programs)
-        {
-          bool elevated = false;
-
-          if (props.GlobalElevated || program.Elevated == true)
-            elevated = true;
-
-          ctx.Status(Messages.TryingToRun(program.Name, program.Args));
-
-          // Try to run the program using the specified path and arguments.
-          if (!RunProgram(program.Path, program.Args, elevated))
-            // If the program cannot be run using the specified path and arguments,
-            // try to run it using the command line
-            if (!RunCommand(program.Path, program.Args, elevated))
-            {
-              // If the program still cannot be run, log an error and continue
-              Log.Error(Messages.RunningFailed(program.Name));
-              continue;
-            }
-          Log.Success(Messages.RunningSucceeded(program.Name));
-        }
-      });
+      Log.Success(Messages.RunningSucceeded(program.Name));
+    };
   }
 
   /// <summary>
@@ -109,43 +93,15 @@ public static class Runner
   /// <returns>True if the command is successfully launched, otherwise false.</returns>
   public static bool RunCommand(string command, string arguments, bool elevated)
   {
-    Process process = new Process();
-    ProcessStartInfo startInfo = new ProcessStartInfo();
-
-    // Set the start info for the command line based on the operating system.
-    if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-    {
-      // On Windows, use the "cmd" command with the "/c" argument to run the command.
-      startInfo.FileName = "cmd";
-      startInfo.Arguments = $"/c {command} {arguments}";
-
-      // If elevated privileges are requested, set the "Verb" property of the start info to "runas".
-      if (elevated)
-        startInfo.Verb = "runas";
-    }
-    else
-    {
-      // On macOS and Linux, use "/bin/bash" to run the command,
-      // or "sudo" if elevated privileges are requested.
-      startInfo.FileName = elevated ? "sudo" : "/bin/bash";
-      startInfo.Arguments = $"-c \"{command}\" {arguments}";
-    }
-
-    // Configure the start info for the process.
-    startInfo.UseShellExecute = elevated ? true : false;
-    startInfo.CreateNoWindow = true;
-    process.StartInfo = startInfo;
-
     try
     {
       // Start the process and return true if it is successfully launched.
-      process.Start();
+      using Process? process = Process.Start(CreateStartInfo(arguments, elevated, command: command));
     }
     catch (Exception)
     {
       return false;
     }
-
     return true;
   }
 
@@ -158,35 +114,22 @@ public static class Runner
   /// <returns>True if the program was successfully started, false otherwise.</returns>
   public static bool RunProgram(string programPath, string arguments, bool elevated)
   {
-    string? program = programPath;
+    string program = programPath;
 
     // If file doesn't exists in specified path
     // or the caller does not have sufficient permissions,
     // try to find the program in PATH.
     if (!File.Exists(program))
-      program = FindProgramInPATH(program);
+      program = FindProgramInPATH(program) ?? string.Empty;
 
     // If program still doesn't exists, return false
-    if (program == null)
+    if (string.IsNullOrEmpty(program))
       return false;
-
-    ProcessStartInfo startInfo = new ProcessStartInfo(program);
-    startInfo.Arguments = arguments;
-    startInfo.UseShellExecute = elevated ? true : false;
-
-    // If elevated is true, configure the start info to run the program with elevated privileges.
-    if (elevated)
-      // If running on Windows, use the "runas" verb to elevate the process.
-      if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-        startInfo.Verb = "runas";
-      // If running on Linux or macOS, use sudo to elevate the process.
-      else
-        startInfo.FileName = "sudo";
 
     try
     {
-      // Start the process with the specified start info.
-      Process.Start(startInfo);
+      // Create start info & run the process.
+      using Process? process = Process.Start(CreateStartInfo(arguments, elevated, program));
     }
     catch (Exception)
     {
@@ -195,6 +138,53 @@ public static class Runner
     }
 
     return true;
+  }
+
+  /// <summary>
+  /// Creates a <see cref="ProcessStartInfo"/> object with the specified arguments and options.
+  /// </summary>
+  /// <param name="arguments">The arguments to pass to the process.</param>
+  /// <param name="elevated">Whether to run the process with elevated privileges.</param>
+  /// <param name="program">The program to run.</param>
+  /// <param name="command">The command to run.</param>
+  /// <returns>A <see cref="ProcessStartInfo"/> object with the specified options.</returns>
+  public static ProcessStartInfo CreateStartInfo(string arguments, bool elevated, string program = "", string command = "")
+  {
+    ProcessStartInfo startInfo = new ProcessStartInfo();
+    startInfo.FileName = string.IsNullOrEmpty(command) ? program : command;
+    startInfo.Arguments = arguments;
+    startInfo.UseShellExecute = elevated;
+    startInfo.CreateNoWindow = true;
+
+    // If elevated is true, configure the start info to run the program with elevated privileges.
+    if (elevated)
+      if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        // If running on Windows, use the "runas" verb to elevate the process.
+        startInfo.Verb = "runas";
+      else
+        // If running on Linux or macOS, use sudo to elevate the process.
+        startInfo.FileName = "sudo";
+
+    // Set the start info for the command line based on the operating system.
+    if (command != string.Empty && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+    {
+      // On Windows, use the "cmd" command with the "/c" argument to run the command.
+      startInfo.FileName = "cmd";
+      startInfo.Arguments = $"/c {command} {arguments}";
+
+      // If elevated privileges are requested, set the "Verb" property of the start info to "runas".
+      if (elevated)
+        startInfo.Verb = "runas";
+    }
+    else if (command != string.Empty)
+    {
+      // On macOS and Linux, use "/bin/bash" to run the command,
+      // or "sudo" if elevated privileges are requested.
+      startInfo.FileName = elevated ? "sudo" : "/bin/bash";
+      startInfo.Arguments = $"-c \"{command}\" {arguments}";
+    }
+
+    return startInfo;
   }
 
   /// <summary>
@@ -233,7 +223,7 @@ public static class Runner
   /// <param name="listTitle">The title of the ListData to search for.</param>
   /// <param name="data">The List of ListData objects to search in.</param>
   /// <returns>The first ListData object with a matching title, or null if no match is found.</returns>
-  private static ListData? FindList(string listTitle, List<ListData> data)
+  private static ListData FindList(string listTitle, List<ListData> data)
   {
     foreach (ListData listData in data)
     {
@@ -241,6 +231,7 @@ public static class Runner
         return listData;
     }
 
-    return null;
+    // If the list data is not found, throw an error.
+    throw new KeyNotFoundException(Messages.ListNotFound(listTitle));
   }
 }

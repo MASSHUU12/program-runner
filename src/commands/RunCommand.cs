@@ -16,7 +16,7 @@ public class RunCommand : Command<RunCommand.Settings>
     public string? ListName { get; set; }
 
     [CommandOption("-l|--log")]
-    [DefaultValue(Defaults.SEVERITY)]
+    [DefaultValue("All")]
     public string? Log { get; set; }
 
     [CommandOption("-e|--elevated")]
@@ -29,7 +29,10 @@ public class RunCommand : Command<RunCommand.Settings>
     if (!File.Exists(settings.List))
       return ValidationResult.Error($"{Messages.FILE_DOESNT_EXISTS}: {settings.List}");
 
-    if (!Defaults.SEVERITY_VALUES.Contains(settings.Log))
+    if (!string.IsNullOrEmpty(settings.Log))
+      settings.Log = Text.Text.FirstLetterToUpperCase(settings.Log.ToLower());
+
+    if (!Enum.GetNames(typeof(Defaults.Severity)).Contains(settings.Log))
       return ValidationResult.Error(Messages.LogDoesntAccept(settings.Log));
 
     return base.Validate(context, settings);
@@ -38,7 +41,9 @@ public class RunCommand : Command<RunCommand.Settings>
   public override int Execute([NotNull] CommandContext context, [NotNull] Settings settings)
   {
     // Set log level
-    Log.severity = settings.Log ?? Defaults.SEVERITY;
+    Log.Severity = string.IsNullOrEmpty(settings.Log)
+      ? Defaults.SEVERITY
+      : (short)Enum.Parse<Defaults.Severity>(settings.Log);
 
     Func<string> checkListName = () =>
     {

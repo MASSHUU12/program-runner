@@ -9,14 +9,19 @@ namespace Constants
   public static class Defaults
   {
     /// <summary>
-    /// Default severity level for logging.
-    /// </summary>
-    public const string SEVERITY = "all";
-
-    /// <summary>
     /// Possible values for severity level.
     /// </summary>
-    public static readonly string[] SEVERITY_VALUES = { "all", "off", "error" };
+    public enum Severity
+    {
+      All,
+      Off,
+      Error
+    }
+
+    /// <summary>
+    /// Default severity level for logging.
+    /// </summary>
+    public const short SEVERITY = (short)Severity.All;
 
     /// <summary>
     /// Default name for a list.
@@ -38,7 +43,7 @@ namespace Constants
     /// Message for when no list is passed to run.
     /// </summary>
     public const string NO_LIST_RUNNING_DEFAULT =
-                $"No list was passed to run, running the default \"{Defaults.LIST_NAME}\".";
+                $"No list was passed to run, running the default {Defaults.LIST_NAME}.";
 
     /// <summary>
     /// Message for when reading a file fails.
@@ -52,6 +57,16 @@ namespace Constants
     public const string RUN_FROM_LIST = "Run programs from the list.";
 
     /// <summary>
+    /// Message for when no programs were found in the list.
+    /// </summary>
+    public const string NO_PROGRAMS_FOUND = "No programs found to run in the list";
+
+    /// <summary>
+    /// Message for when path to the file is null or empty.
+    /// </summary>
+    public const string PATH_NULL_OR_EMPTY = "File path cannot be null or empty.";
+
+    /// <summary>
     /// Message for when a log option is not accepted.
     /// </summary>
     /// <param name="option">The log option that is not accepted.</param>
@@ -60,7 +75,7 @@ namespace Constants
     {
       return $"Log option does not accept: {option}.\nPossible values are: {string.Join(
         ", ",
-        Defaults.SEVERITY_VALUES)}";
+        string.Join(", ", Enum.GetValues(typeof(Defaults.Severity)).Cast<Defaults.Severity>().Select(x => x.ToString())))}";
     }
 
     /// <summary>
@@ -71,18 +86,17 @@ namespace Constants
     /// <returns>A string describing that programs are being run from a list.</returns>
     public static string RunningFromList(string? list, string? file)
     {
-      return $"Running programs from a list \"{list}\" from a file \"file\".";
+      return $"Running programs from a list {list} from a file {file}.";
     }
 
     /// <summary>
     /// Message for when a list is not found.
     /// </summary>
     /// <param name="list">The name of the list that was not found.</param>
-    /// <param name="file">The name of the file containing the list.</param>
     /// <returns>A string describing that the list was not found in the file.</returns>
-    public static string ListNotFound(string? list, string? file)
+    public static string ListNotFound(string list)
     {
-      return $"The list named \"{list}\" was not found in the file \"{file}\".";
+      return $"The list named {list} was not found.";
     }
 
     /// <summary>
@@ -93,7 +107,11 @@ namespace Constants
     /// <returns>A string describing that a program is being run with its name and arguments.</returns>
     public static string TryingToRun(string? name, string? args)
     {
-      return $"Trying to run a program \"{name ?? "undefined"}\" with arguments \"{args}\".";
+      if (name == null || name == string.Empty)
+        name = "undefined";
+      if (args == null || args == string.Empty)
+        return $"Trying to run a program {name} without arguments.";
+      return $"Trying to run a program {name} with arguments {args}.";
     }
 
     /// <summary>
@@ -103,6 +121,8 @@ namespace Constants
     /// <returns>A string describing that running the program failed.</returns>
     public static string RunningFailed(string? name)
     {
+      if (name == null || name == string.Empty)
+        name = "undefined";
       return $"An attempt to run the {name} failed.";
     }
 
@@ -113,7 +133,41 @@ namespace Constants
     /// <returns>A string describing that running the program succeeded.</returns>
     public static string RunningSucceeded(string? name)
     {
+      if (name == null || name == string.Empty)
+        name = "undefined";
       return $"Program {name} successfully launched.";
+    }
+
+    /// <summary>
+    /// Returns a string message indicating that a property with the specified name
+    /// is not a string or boolean value.
+    /// </summary>
+    /// <param name="propertyName">The name of the property that is not a string or boolean value.</param>
+    /// <returns>A string message indicating that a property with the specified name
+    /// is not a string or boolean value.</returns>
+    public static string PropertyNotStringOrBool(string propertyName)
+    {
+      return $"Property {propertyName} is not a string or boolean value.";
+    }
+
+    /// <summary>
+    /// Returns a string message indicating that a required property with the specified name is missing.
+    /// </summary>
+    /// <param name="propertyName">The name of the missing property.</param>
+    /// <returns>A string message indicating that a required property with the specified name is missing.</returns>
+    public static string PropertyMissing(string propertyName)
+    {
+      return $"Property {propertyName} is missing.";
+    }
+
+    /// <summary>
+    /// Returns a string message indicating that a non-optional property with the specified name is not present.
+    /// </summary>
+    /// <param name="propertyName">The name of the missing property.</param>
+    /// <returns>A string message indicating that a non-optional property with the specified name is not present.</returns>
+    public static string PropertyNotOptional(string propertyName)
+    {
+      return $"Property {propertyName} is not optional.";
     }
   }
 }
