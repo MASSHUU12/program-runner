@@ -76,7 +76,7 @@ namespace TextFile
     {
       // Check that the file path is not null or empty.
       if (string.IsNullOrEmpty(filePath))
-        throw new ArgumentException("File path cannot be null or empty.", nameof(filePath));
+        throw new ArgumentException(Messages.PATH_NULL_OR_EMPTY, nameof(filePath));
 
       // Check that the file exists.
       if (!File.Exists(filePath))

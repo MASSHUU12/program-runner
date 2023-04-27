@@ -43,7 +43,7 @@ namespace Constants
     /// Message for when no list is passed to run.
     /// </summary>
     public const string NO_LIST_RUNNING_DEFAULT =
-                $"No list was passed to run, running the default \"{Defaults.LIST_NAME}\".";
+                $"No list was passed to run, running the default {Defaults.LIST_NAME}.";
 
     /// <summary>
     /// Message for when reading a file fails.
@@ -60,6 +60,11 @@ namespace Constants
     /// Message for when no programs were found in the list.
     /// </summary>
     public const string NO_PROGRAMS_FOUND = "No programs found to run in the list";
+
+    /// <summary>
+    /// Message for when path to the file is null or empty.
+    /// </summary>
+    public const string PATH_NULL_OR_EMPTY = "File path cannot be null or empty.";
 
     /// <summary>
     /// Message for when a log option is not accepted.
@@ -81,7 +86,7 @@ namespace Constants
     /// <returns>A string describing that programs are being run from a list.</returns>
     public static string RunningFromList(string? list, string? file)
     {
-      return $"Running programs from a list \"{list}\" from a file \"{file}\".";
+      return $"Running programs from a list {list} from a file {file}.";
     }
 
     /// <summary>
@@ -91,7 +96,7 @@ namespace Constants
     /// <returns>A string describing that the list was not found in the file.</returns>
     public static string ListNotFound(string list)
     {
-      return $"The list named \"{list}\" was not found.";
+      return $"The list named {list} was not found.";
     }
 
     /// <summary>
@@ -105,8 +110,8 @@ namespace Constants
       if (name == null || name == string.Empty)
         name = "undefined";
       if (args == null || args == string.Empty)
-        return $"Trying to run a program \"{name}\" without arguments.";
-      return $"Trying to run a program \"{name}\" with arguments \"{args}\".";
+        return $"Trying to run a program {name} without arguments.";
+      return $"Trying to run a program {name} with arguments {args}.";
     }
 
     /// <summary>
@@ -142,7 +147,7 @@ namespace Constants
     /// is not a string or boolean value.</returns>
     public static string PropertyNotStringOrBool(string propertyName)
     {
-      return $"Property \"{propertyName}\" is not a string or boolean value.";
+      return $"Property {propertyName} is not a string or boolean value.";
     }
 
     /// <summary>
@@ -152,7 +157,7 @@ namespace Constants
     /// <returns>A string message indicating that a required property with the specified name is missing.</returns>
     public static string PropertyMissing(string propertyName)
     {
-      return $"Property \"{propertyName}\" is missing.";
+      return $"Property {propertyName} is missing.";
     }
 
     /// <summary>
@@ -162,7 +167,7 @@ namespace Constants
     /// <returns>A string message indicating that a non-optional property with the specified name is not present.</returns>
     public static string PropertyNotOptional(string propertyName)
     {
-      return $"Property \"{propertyName}\" is not optional.";
+      return $"Property {propertyName} is not optional.";
     }
   }
 }
