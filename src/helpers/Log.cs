@@ -131,4 +131,13 @@ public static class Log
       Console.WriteLine(message);
     }
   }
+
+  /// <summary>
+  /// Ignore severity settings and always log message.
+  /// </summary>
+  /// <param name="message">The message to log.</param>
+  public static void Override(string message)
+  {
+    Console.WriteLine(message);
+  }
 }
