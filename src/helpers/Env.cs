@@ -1,5 +1,11 @@
+using System.Diagnostics;
+using System.Runtime.InteropServices;
+
 namespace Env
 {
+  /// <summary>
+  /// A static class that provides methods for working with the PATH environment variable.
+  /// </summary>
   public static class PATH
   {
     /// <summary>
@@ -28,15 +34,70 @@ namespace Env
       return null;
     }
 
-    public static void Add(string program)
+    /// <summary>
+    /// Adds a path to a program to the PATH environment variable.
+    /// </summary>
+    /// <param name="pathToTheProgram">The full path to the program to add.</param>
+    public static void Add(string pathToTheProgram)
     {
-      return;
+      string? path = GetPath();
+
+      // If the paths are not available, log an error and return.
+      if (path == null)
+      {
+        Log.Error("No access to PATH");
+        return;
+      }
+
+      // Append the new path to the paths array.
+      path += Path.PathSeparator + pathToTheProgram;
+
+      // Check the operating system platform to determine how to set the PATH environment variable.
+      if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        // On Windows, use the Environment.SetEnvironmentVariable method.
+        Environment.SetEnvironmentVariable(
+          "PATH",
+          pathToTheProgram,
+          EnvironmentVariableTarget.User
+        );
+      else
+      {
+        // On Unix-like systems, use a bash command to set the PATH environment variable.
+        ProcessStartInfo startInfo = new ProcessStartInfo();
+        startInfo.FileName = "/bin/bash";
+        startInfo.Arguments = "-c \"export PATH='"
+          + path
+          + "'; exec \"$SHELL\"\"";
+        startInfo.UseShellExecute = false;
+        Process.Start(startInfo);
+      }
+
+      Log.Info("The program should now be available through PATH, if not, try restarting your terminal.");
     }
 
-    private static string[]? GetPaths()
+    /// <summary>
+    /// Retrieves the paths as string from the PATH environment variable.
+    /// </summary>
+    private static string? GetPath()
     {
       string? path = Environment.GetEnvironmentVariable("PATH");
 
+      // If the PATH environment variable is not set or is empty, return null.
+      if (string.IsNullOrEmpty(path))
+        return null;
+
+      // Split the PATH env variable into separate path and return it.
+      return path;
+    }
+
+    /// <summary>
+    /// Retrieves the paths as array from the PATH environment variable.
+    /// </summary>
+    private static string[]? GetPaths()
+    {
+      string? path = GetPath();
+
+      // If the PATH environment variable is not set or is empty, return null.
       if (string.IsNullOrEmpty(path))
         return null;
 
