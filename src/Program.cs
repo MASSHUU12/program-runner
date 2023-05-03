@@ -17,6 +17,10 @@ namespace Program
               .WithAlias("r")
               .WithDescription(Constants.Messages.RUN_FROM_LIST).
               WithExample(new[] { "run", "./path/to/the/list.json", "--log", "all" });
+
+        config.AddCommand<AddToPathCommand>("addToPath")
+              .WithAlias("atp")
+              .WithDescription("The command to add this program to the PATH.");
       });
       app.Run(args);
     }
