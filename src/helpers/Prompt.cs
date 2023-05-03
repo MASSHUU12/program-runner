@@ -41,8 +41,8 @@ public static class Prompt
   /// </summary>
   /// <param name="message">The message to display to the user.</param>
   /// <returns>
-  /// If the user enters 'Y' or 'y', returns true.
-  /// If the user enters 'N' or 'n', returns false.
+  /// If the user enters 'Y'/'y' or 'Yes', returns true.
+  /// If the user enters 'N'/'n' or 'No', returns false.
   /// If the user enters any other input, prompts the user again until valid input is received.
   /// </returns>
   public static bool YesNo(string message)
