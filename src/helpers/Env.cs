@@ -10,14 +10,10 @@ namespace Env
     /// <returns>The full path to the program if found; otherwise, null.</returns>
     public static string? Find(string program)
     {
-      char separator = Path.PathSeparator;
-      string? pathEnv = Environment.GetEnvironmentVariable("PATH");
+      string[]? paths = GetPaths();
 
-      if (string.IsNullOrEmpty(pathEnv))
+      if (paths == null)
         return null;
-
-      // Split the PATH env variable into separate path.
-      string[] paths = pathEnv.Split(separator);
 
       // Loop through each path and look if the program exists.
       foreach (string path in paths)
@@ -30,6 +26,22 @@ namespace Env
 
       // Program is not found.
       return null;
+    }
+
+    public static void Add(string program)
+    {
+      return;
+    }
+
+    private static string[]? GetPaths()
+    {
+      string? path = Environment.GetEnvironmentVariable("PATH");
+
+      if (string.IsNullOrEmpty(path))
+        return null;
+
+      // Split the PATH env variable into separate path and return it.
+      return path.Split(Path.PathSeparator);
     }
   }
 }
