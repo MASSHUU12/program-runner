@@ -37,6 +37,39 @@ public static class Prompt
   }
 
   /// <summary>
+  /// Prompts the user for a yes or no response to the given message.
+  /// </summary>
+  /// <param name="message">The message to display to the user.</param>
+  /// <returns>
+  /// If the user enters 'Y' or 'y', returns true.
+  /// If the user enters 'N' or 'n', returns false.
+  /// If the user enters any other input, prompts the user again until valid input is received.
+  /// </returns>
+  public static bool YesNo(string message)
+  {
+    bool? input;
+
+    while (true)
+    {
+      Log.Override($"{message} [Y/N]");
+
+      // Attempts to convert the user's input to a boolean value.
+      input = Converter.YesNoToBool(GetInput() ?? string.Empty);
+
+      // If the input could not be converted to a boolean value,
+      // prompts the user again until valid input is received.
+      if (input == null)
+      {
+        Log.Error("Incorrect data was entered. Acceptable options are Y/N.");
+        continue;
+      }
+      break;
+    }
+
+    return (bool)input;
+  }
+
+  /// <summary>
   /// Reads a line of text entered by the user from the console.
   /// </summary>
   /// <returns>
