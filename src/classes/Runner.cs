@@ -2,6 +2,7 @@ using TextFile;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using Constants;
+using Env;
 
 /// <summary>
 /// This class provides methods to prepare and run programs from a list.
@@ -120,7 +121,7 @@ public static class Runner
     // or the caller does not have sufficient permissions,
     // try to find the program in PATH.
     if (!File.Exists(program))
-      program = FindProgramInPATH(program) ?? string.Empty;
+      program = PATH.Find(program) ?? string.Empty;
 
     // If program still doesn't exists, return false
     if (string.IsNullOrEmpty(program))
@@ -185,36 +186,6 @@ public static class Runner
     }
 
     return startInfo;
-  }
-
-  /// <summary>
-  /// Finds the full path to a program
-  /// by looking for it in the directories listed in the PATH environment variable.
-  /// </summary>
-  /// <param name="program">The name of the program to search for.</param>
-  /// <returns>The full path to the program if found; otherwise, null.</returns>
-  private static string? FindProgramInPATH(string program)
-  {
-    char pathSeparators = Path.PathSeparator;
-    string? PATH = Environment.GetEnvironmentVariable("PATH");
-
-    if (PATH == null)
-      return null;
-
-    // Split the PATH env variable into separate path
-    string[] paths = PATH.Split(pathSeparators);
-
-    // Loop through each path and look if the program exists
-    foreach (string path in paths)
-    {
-      string fullPath = Path.Combine(path, program);
-
-      if (File.Exists(fullPath))
-        return fullPath;
-    }
-
-    // If the program is not found return null
-    return null;
   }
 
   /// <summary>
