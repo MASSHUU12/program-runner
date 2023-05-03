@@ -19,4 +19,31 @@ public static class Converter
     // If the parse operation is not successful, returns a null value.
     return null;
   }
+
+  /// <summary>
+  /// Converts a string representation of yes or no to a nullable boolean value.
+  /// </summary>
+  /// <param name="str">The string to convert.</param>
+  /// <returns>
+  /// If the string is "yes" or "y", returns true.
+  /// If the string is "no" or "n", returns false.
+  /// If the string is any other value, returns null.
+  /// </returns>
+  public static bool? YesNoToBool(string str)
+  {
+    string lower = str.ToLower();
+
+    switch (lower)
+    {
+      case "yes":
+      case "y":
+        return true;
+
+      case "no":
+      case "n":
+        return false;
+      default:
+        return null;
+    }
+  }
 }
