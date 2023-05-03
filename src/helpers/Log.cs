@@ -138,6 +138,6 @@ public static class Log
   /// <param name="message">The message to log.</param>
   public static void Override(string message)
   {
-    Console.WriteLine(message);
+    Console.Write(message);
   }
 }
