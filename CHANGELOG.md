@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+
+### Added
+
+- The program can add itself to the PATH for simpler startup
+
+### Changed
+
+- The program from now on searches the system PATH and user PATH looking for a program/command to run [TODO]
+
 ## [1.2.0 - 2023-04-27]
 
 ### Changed
